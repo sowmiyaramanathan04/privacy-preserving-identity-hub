@@ -318,8 +318,9 @@ The implementation successfully combines cryptographic techniques, token-based a
 
 # Author
 
-Sowmiya Ramanathan
+Sowmiya S R, Uday Vamsi V, Vignesh Adithya D
 B.Tech Artificial Intelligence and Data Science
+
 
 ---
 
