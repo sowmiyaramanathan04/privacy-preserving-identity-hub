@@ -1,0 +1,71 @@
+Invoke-RestMethod -Uri http://127.0.0.1:7000/access-service `
+-Method POST `
+-ContentType "application/json" `
+-Body '{
+  "citizen_id": "CIT90001",
+  "name": "Sowmya",
+  "dob": "2002-04-12",
+  "is_student": 1,
+  "service": "education",
+  "device_id": "VIVA-LAPTOP-01"
+}'
+
+Invoke-RestMethod -Uri http://127.0.0.1:7000/access-service `
+-Method POST `
+-ContentType "application/json" `
+-Body '{
+  "citizen_id": "CIT90002",
+  "name": "DemoUser",
+  "dob": "2002-04-12",
+  "is_student": 0,
+  "service": "education",
+  "device_id": "VIVA-LAPTOP-02"
+}'
+
+Invoke-RestMethod -Uri http://127.0.0.1:7000/access-service `
+-Method POST `
+-ContentType "application/json" `
+-Body '{
+  "citizen_id": "CIT80001",
+  "name": "AdultUser",
+  "dob": "1985-03-18",
+  "is_student": 0,
+  "service": "welfare",
+  "device_id": "VIVA-LAPTOP-03"
+}'
+
+Invoke-RestMethod -Uri http://127.0.0.1:7000/access-service `
+-Method POST `
+-ContentType "application/json" `
+-Body '{
+  "citizen_id": "CIT80001",
+  "name": "AdultUser",
+  "dob": "1985-03-18",
+  "is_student": 0,
+  "service": "welfare",
+  "device_id": "VIVA-LAPTOP-03"
+}'
+
+Invoke-RestMethod -Uri http://127.0.0.1:7000/access-service `
+-Method POST `
+-ContentType "application/json" `
+-Body '{
+  "citizen_id": "CIT70002",
+  "name": "YoungUser",
+  "dob": "2010-05-10",
+  "is_student": 1,
+  "service": "health",
+  "device_id": "VIVA-LAPTOP-05"
+}'
+
+Invoke-RestMethod -Uri http://127.0.0.1:7000/access-service `
+-Method POST `
+-ContentType "application/json" `
+-Body '{
+  "citizen_id": "CIT00010",
+  "name": "IGNORED",
+  "dob": "1900-01-01",
+  "is_student": 1,
+  "service": "education",
+  "device_id": "VIVA-LAPTOP-OLD-01"
+}'

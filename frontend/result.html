@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Authorization | PrivacyHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body { background: #0a0a0b; }
+        
+        .glow-emerald {
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.15);
+        }
+        .glow-red {
+            box-shadow: 0 0 40px rgba(239, 68, 68, 0.15);
+        }
+        
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.2; }
+            100% { transform: scale(0.8); opacity: 0.5; }
+        }
+        .pulse-ring {
+            animation: pulse-ring 2s ease-in-out infinite;
+        }
+        
+        @keyframes checkmark {
+            0% { stroke-dashoffset: 50; }
+            100% { stroke-dashoffset: 0; }
+        }
+        .checkmark-path {
+            stroke-dasharray: 50;
+            stroke-dashoffset: 50;
+            animation: checkmark 0.6s ease-out 0.3s forwards;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        .loading-spinner {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: #10b981;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="border-b border-gray-800/50 bg-gray-900/30 backdrop-blur-sm">
+        <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                </div>
+                <span class="text-lg font-semibold text-white">PrivacyHub</span>
+            </div>
+            <span class="text-sm text-gray-500">Service Authorization</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex items-center justify-center p-6">
+        <div id="output" class="w-full max-w-md">
+            <!-- Loading State -->
+            <div class="bg-gray-900/50 border border-gray-800 rounded-2xl p-10 text-center">
+                <div class="loading-spinner mx-auto mb-6"></div>
+                <h2 class="text-xl font-semibold text-white mb-2">Verifying Authorization</h2>
+                <p class="text-gray-400 text-sm">Processing your credentials...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800/50 py-4">
+        <div class="max-w-4xl mx-auto px-6 flex items-center justify-center gap-6 text-xs text-gray-500">
+            <div class="flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <span>Zero-Knowledge Proof</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+                </svg>
+                <span>End-to-End Encrypted</span>
+            </div>
+        </div>
+    </footer>
+
+<script>
+const BASE = "http://127.0.0.1:7000";
+
+async function run(){
+    const service = localStorage.getItem("service");
+
+    const data = {
+        citizen_id: localStorage.getItem("citizen_id"),
+        name: localStorage.getItem("name"),
+        dob: localStorage.getItem("dob"),
+        is_student: parseInt(localStorage.getItem("is_student")),
+        service: service,
+        device_id: "DEVICE-123"
+    };
+
+    const res = await fetch(BASE + "/access-service", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(data)
+    });
+
+    const result = await res.json();
+
+    if(result.RESULT === "GRANTED"){
+        
+        // SERVICE BASED REDIRECTION
+        let url = "";
+        let serviceName = "";
+
+        if(service === "education"){
+            url = "https://nptel.ac.in";
+            serviceName = "Education Portal";
+        }
+        else if(service === "health"){
+            url = "https://www.apollohospitals.com";
+            serviceName = "Health Services";
+        }
+        else if(service === "welfare"){
+            url = "https://www.india.gov.in";
+            serviceName = "Welfare Services";
+        }
+
+        output.innerHTML = `
+        <div class="bg-gray-900/50 border border-emerald-500/30 rounded-2xl p-10 text-center glow-emerald">
+            <!-- Success Icon -->
+            <div class="relative w-20 h-20 mx-auto mb-6">
+                <div class="absolute inset-0 bg-emerald-500/20 rounded-full pulse-ring"></div>
+                <div class="absolute inset-2 bg-emerald-500/10 rounded-full flex items-center justify-center border border-emerald-500/30">
+                    <svg class="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path class="checkmark-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <h2 class="text-2xl font-bold text-white mb-2">Access Granted</h2>
+            <p class="text-emerald-400 font-medium mb-1">${serviceName}</p>
+            <p class="text-gray-400 text-sm mb-6">Your identity has been verified successfully</p>
+            
+            <!-- Progress Bar -->
+            <div class="bg-gray-800 rounded-full h-1.5 mb-3 overflow-hidden">
+                <div class="bg-emerald-500 h-full rounded-full transition-all duration-[2000ms] ease-linear" style="width: 0%" id="progressBar"></div>
+            </div>
+            <p class="text-gray-500 text-xs">Redirecting to service...</p>
+        </div>`;
+
+        // Animate progress bar
+        setTimeout(() => {
+            document.getElementById('progressBar').style.width = '100%';
+        }, 50);
+
+        // REDIRECT AFTER 2 SECONDS
+        setTimeout(() => {
+            window.location.href = url;
+        }, 2000);
+
+    } else {
+        output.innerHTML = `
+        <div class="bg-gray-900/50 border border-red-500/30 rounded-2xl p-10 text-center glow-red shake">
+            <!-- Denied Icon -->
+            <div class="relative w-20 h-20 mx-auto mb-6">
+                <div class="absolute inset-0 bg-red-500/20 rounded-full"></div>
+                <div class="absolute inset-2 bg-red-500/10 rounded-full flex items-center justify-center border border-red-500/30">
+                    <svg class="w-10 h-10 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <h2 class="text-2xl font-bold text-white mb-2">Access Denied</h2>
+            <p class="text-red-400 font-medium mb-1">Verification Failed</p>
+            <p class="text-gray-400 text-sm mb-8">You are not eligible for this service</p>
+            
+            <button onclick="back()" class="px-6 py-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-gray-600 text-white font-medium rounded-xl transition-all duration-200 flex items-center gap-2 mx-auto">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Return to Dashboard
+            </button>
+        </div>`;
+    }
+}
+
+function back(){
+    window.location = "dashboard.html";
+}
+
+run();
+</script>
+
+</body>
+</html>

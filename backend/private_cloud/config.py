@@ -1,0 +1,2 @@
+SYSTEM_SALT = "ppih_system_salt_2026"
+TOKEN_EXPIRY_SECONDS = 600
