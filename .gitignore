@@ -5,3 +5,6 @@ __pycache__/
 venv/
 .idea/
 .vscode/
+backend/public_deploy/keys/
+backend/keys/
+*.pem

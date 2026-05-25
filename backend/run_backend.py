@@ -107,7 +107,6 @@ def access_service():
         )
 
         print("TOKEN STATUS:", token_response.status_code)
-        print("TOKEN RESPONSE:", token_response.text)
 
         if token_response.status_code != 200:
             return jsonify({
